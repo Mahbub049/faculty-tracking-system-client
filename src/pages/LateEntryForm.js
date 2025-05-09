@@ -22,7 +22,7 @@ const LateEntryForm = ({ refreshEntries }) => {
 
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/faculty')
+    axios.get('https://faculty-tracking-system-server.onrender.com/api/faculty')
       .then(res => setFacultyList(res.data))
       .catch(err => console.error(err));
   }, []);
@@ -37,7 +37,7 @@ const handleSubmit = e => {
 
   const formData = { ...form, late_minutes }; // ✅ define it here
 
-  axios.post('http://localhost:5000/api/late-entry', formData)
+  axios.post('https://faculty-tracking-system-server.onrender.com/api/late-entry', formData)
     .then(res => {
       alert("Late entry recorded!");
       setForm({ faculty_id: '', course_code: '', date: '', scheduled_time: '', arrival_time: '', room: '' });

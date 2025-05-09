@@ -50,7 +50,7 @@ function App() {
   const [entries, setEntries] = useState([]);
 
 const fetchEntries = () => {
-  axios.get('http://localhost:5000/api/late-entry')
+  axios.get('https://faculty-tracking-system-server.onrender.com/api/late-entry')
     .then(res => setEntries(res.data))
     .catch(err => console.error(err));
 };

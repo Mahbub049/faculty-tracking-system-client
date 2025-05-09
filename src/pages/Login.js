@@ -7,7 +7,7 @@ const Login = ({ setLoggedIn }) => {
 
 const handleLogin = async () => {
   try {
-    const res = await axios.post('http://localhost:5000/api/login', { username, password });
+    const res = await axios.post('https://faculty-tracking-system-server.onrender.com/api/login', { username, password });
     if (res.data.success) {
       // store login time
       localStorage.setItem('loggedIn', 'true');

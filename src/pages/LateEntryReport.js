@@ -10,7 +10,7 @@ const LateEntryReport = ({ entries }) => {
 
   useEffect(() => {
     // Load faculty names
-    axios.get('http://localhost:5000/api/faculty')
+    axios.get('https://faculty-tracking-system-server.onrender.com/api/faculty')
       .then(res => setFacultyList(res.data));
   }, []);
 
