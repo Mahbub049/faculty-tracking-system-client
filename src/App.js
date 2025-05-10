@@ -67,11 +67,11 @@ useEffect(() => {
 
 <div className="navbar bg-base-100 mb-4">
   <div className="flex-1">
-    <a className="btn btn-ghost text-xl">Faculty Late Tracking System</a>
+    <a className="btn btn-ghost text-xl">Faculty Tracking System</a>
   </div>
   <div className="flex-none">
     <ul className="menu menu-horizontal px-1">
-            <li><button onClick={handleLogout}>Logout</button></li>
+            <li><button className='btn bg-red-500 text-white hover:bg-red-200 hover:text-black' onClick={handleLogout}>Logout</button></li>
       {/* <li>
         <details>
           <summary>Parent</summary>

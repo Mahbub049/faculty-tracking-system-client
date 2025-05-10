@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 const LateEntryForm = ({ refreshEntries }) => {
   const [facultyList, setFacultyList] = useState([]);
   const [availableCourses, setAvailableCourses] = useState([]);
+  const [lastEntryId, setLastEntryId] = useState(null);
+
+
+//   const handleReset = () => {
+//   setForm({ faculty_id: '', course_code: '', date: '', scheduled_time: '', arrival_time: '', room: '' });
+//   setAvailableCourses([]);
+// };
 
   const [form, setForm] = useState({
     faculty_id: '',
@@ -39,7 +47,11 @@ const handleSubmit = e => {
 
   axios.post('https://faculty-tracking-system-server.onrender.com/api/late-entry', formData)
     .then(res => {
-      alert("Late entry recorded!");
+Swal.fire({
+  title: "Entry Recorded",
+  text: "Your Entry has been Recorded!",
+  icon: "success"
+});
       setForm({ faculty_id: '', course_code: '', date: '', scheduled_time: '', arrival_time: '', room: '' });
 
       if (refreshEntries) refreshEntries(); // ✅ if this was passed from parent
@@ -94,77 +106,112 @@ const roomOptions = [
 
   return (
     <div className='border border-2 rounded-md p-12'>
-      <h2 className='text-2xl mb-2 text-center font-semibold'>Late Arrival Entry</h2>
+      <h2 className='text-2xl mb-2 text-center font-semibold'>Faculty Arrival Entry</h2>
       <hr className='mb-4'></hr>
       <form onSubmit={handleSubmit}>
 
 <div className='grid grid-cols-2 gap-8'>
 
-  <div className='flex gap-2 items-center'>
-  <p>Faculty: </p>
-  <select
-  name="faculty_id"
-  value={form.faculty_id}
-  className='w-full'
-  onChange={(e) => {
-    const selectedId = e.target.value;
-    const selectedFaculty = facultyList.find(f => f._id === selectedId);
-    setForm({ ...form, faculty_id: selectedId, course_code: '' });
-    setAvailableCourses(selectedFaculty?.courses || []);
-  }}
-  required
->
-  <option value="">Select Faculty</option>
-  {facultyList.map(f => (
-    <option key={f._id} value={f._id}>{f.name} ({f.designation})</option>
-  ))}
-</select>
+  {/* Faculty */}
+  <div className='flex items-center gap-2'>
+    <label className='w-40 whitespace-nowrap'>Faculty:</label>
+    <select
+      name="faculty_id"
+      value={form.faculty_id}
+      className='w-full select select-bordered'
+      onChange={(e) => {
+        const selectedId = e.target.value;
+        const selectedFaculty = facultyList.find(f => f._id === selectedId);
+        setForm({ ...form, faculty_id: selectedId, course_code: '' });
+        setAvailableCourses(selectedFaculty?.courses || []);
+      }}
+      required
+    >
+      <option value="">Select Faculty</option>
+      {facultyList.map(f => (
+        <option key={f._id} value={f._id}>{f.name} ({f.designation})</option>
+      ))}
+    </select>
+  </div>
+
+  {/* Course */}
+  <div className='flex items-center gap-2'>
+    <label className='w-40 whitespace-nowrap'>Course:</label>
+    <select
+      name="course_code"
+      value={form.course_code}
+      className='w-full select select-bordered'
+      onChange={handleChange}
+      required
+    >
+      <option value="">Select Course</option>
+      {availableCourses.map(course => (
+        <option key={course} value={course}>{course}</option>
+      ))}
+    </select>
+  </div>
+
+  {/* Date */}
+  <div className="flex items-center gap-2">
+    <label htmlFor="date" className="w-40 whitespace-nowrap">Pick Date:</label>
+    <input
+      id="date"
+      name="date"
+      type="date"
+      className="input input-bordered w-full focus:outline-none cursor-pointer"
+      value={form.date}
+      onChange={handleChange}
+      required
+    />
+  </div>
+
+
+  {/* Scheduled Time */}
+  <div className='flex items-center gap-2'>
+    <label className='w-40 whitespace-nowrap'>Scheduled Time:</label>
+    <input
+      name="scheduled_time"
+      type="time"
+      value={form.scheduled_time}
+      onChange={handleChange}
+      className='w-full input input-bordered cursor-pointer'
+      required
+    />
+  </div>
+
+  {/* Arrival Time */}
+  <div className='flex items-center gap-2'>
+    <label className='w-40 whitespace-nowrap'>Arrival Time:</label>
+    <input
+      name="arrival_time"
+      type="time"
+      value={form.arrival_time}
+      onChange={handleChange}
+      className='w-full input input-bordered cursor-pointer'
+      required
+    />
+  </div>
+
+  {/* Room */}
+  <div className='flex items-center gap-2'>
+    <label className='w-40 whitespace-nowrap'>Pick Room:</label>
+    <select
+      name="room"
+      value={form.room}
+      onChange={handleChange}
+      className='w-full select select-bordered'
+      required
+    >
+      <option value="">Select Room</option>
+      {roomOptions.map(room => (
+        <option key={room} value={room}>{room}</option>
+      ))}
+    </select>
+  </div>
+
 </div>
 
-<div className='flex gap-2 items-center'>
-  <p>Course: </p>
-  <select
-  className='w-full'
-  name="course_code"
-  value={form.course_code}
-  onChange={handleChange}
-  required
->
-  <option value="">Select Course</option>
-  {availableCourses.map(course => (
-    <option key={course} value={course}>{course}</option>
-  ))}
-</select>
-</div>
 
-        <div className='flex gap-2 items-center'>
-          <p>Pick Date:</p>
-          <input className='w-full' name="date" type="date" value={form.date} onChange={handleChange} required />
-        </div>
-
-        <div className='flex gap-2 items-center'>
-          <p >Pick Scheduled Time:</p>
-          <input className='w-full' name="scheduled_time" type="time" value={form.scheduled_time} onChange={handleChange} required />
-        </div>
-
-        <div className='flex gap-2 items-center'>
-          <p>Pick Arrival Time:</p>
-          <input  className='w-full' name="arrival_time" type="time" value={form.arrival_time} onChange={handleChange} required />
-        </div>
-
-        <div className='flex gap-2 items-center'>
-          <p>Pick Arrival Time:</p>
-                  <select name="room" value={form.room} onChange={handleChange} required>
-  <option value="">Select Room</option>
-  {roomOptions.map(room => (
-    <option key={room} value={room}>{room}</option>
-  ))}
-</select>
-        </div>
-        
-
-
-</div>
         <button className='btn btn-primary w-full mt-8' type="submit">Submit</button>
       </form>
     </div>
