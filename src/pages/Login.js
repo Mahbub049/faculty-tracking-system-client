@@ -5,11 +5,11 @@ const Login = ({ setLoggedIn }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-const handleLogin = async () => {
+const handleLogin = async (e) => {
+  e.preventDefault(); // ⛔ prevent full-page reload
   try {
     const res = await axios.post('https://faculty-tracking-system-server.onrender.com/api/login', { username, password });
     if (res.data.success) {
-      // store login time
       localStorage.setItem('loggedIn', 'true');
       localStorage.setItem('loginTime', new Date().getTime());
       setLoggedIn(true);
@@ -18,6 +18,7 @@ const handleLogin = async () => {
     alert('Login failed');
   }
 };
+
 
 
   return (
@@ -39,7 +40,7 @@ const handleLogin = async () => {
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" className="input input-bordered" required />
       </div>
       <div className="form-control mt-6">
-        <button onClick={handleLogin} className="btn w-full btn-primary">Login</button>
+        <button type="submit" onClick={handleLogin} className="btn w-full btn-primary">Login</button>
       </div>
     </form>
   </div>
